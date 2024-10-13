@@ -1,13 +1,18 @@
 'use strict';
 
-const inputsEl = [...document.querySelectorAll('.field-text')];
+document.querySelectorAll('form').forEach((form) => {
+  const inputs = form.querySelectorAll('input');
 
-inputsEl.forEach((el) => {
-  const labelEl = document.createElement('label');
+  inputs.forEach((input) => {
+    const label = document.createElement('label');
+    label.className = 'field-label';
+    label.htmlFor = input.id;
+    label.textContent = input.name.replace(/([A-Z])/g, ' $1').trim();
 
-  labelEl.className = 'field-label';
-  labelEl.htmlFor = el.id;
-  labelEl.textContent = el.name;
-  el.parentNode.appendChild(labelEl);
-  el.placeholder = el.name;
+    if (!input.placeholder) {
+      input.placeholder = input.name.charAt(0).toUpperCase() + input.name.slice(1);
+    }
+
+    input.parentNode.insertBefore(label, input);
+  });
 });
