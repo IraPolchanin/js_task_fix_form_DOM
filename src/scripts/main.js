@@ -1,18 +1,24 @@
 'use strict';
 
-document.querySelectorAll('form').forEach((form) => {
-  const inputs = form.querySelectorAll('input');
+const inputs = document.querySelectorAll('input');
 
-  inputs.forEach((input) => {
-    const label = document.createElement('label');
-    label.className = 'field-label';
-    label.htmlFor = input.id;
-    label.textContent = input.name.replace(/([A-Z])/g, ' $1').trim();
+function capitalize(str) {
+  const result = str;
 
-    if (!input.placeholder) {
-      input.placeholder = input.name.charAt(0).toUpperCase() + input.name.slice(1);
-    }
+  return result.charAt(0).toUpperCase() + result.slice(1);
+}
 
-    input.parentNode.insertBefore(label, input);
-  });
+inputs.forEach((item) => {
+  let itemName = capitalize(item.getAttribute('name'));
+  const itemLabel = document.createElement('label');
+
+  if (itemName.toLowerCase().includes('name')) {
+    itemName = itemName.slice(0, -4) + ' ' + itemName.slice(-4);
+  }
+
+  itemLabel.classList.add('field-label');
+  itemLabel.setAttribute('for', item.id);
+  itemLabel.textContent = itemName.toUpperCase();
+  item.setAttribute('placeholder', itemName);
+  item.before(itemLabel);
 });
