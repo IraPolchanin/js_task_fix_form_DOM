@@ -1,24 +1,37 @@
 'use strict';
 
-const inputs = document.querySelectorAll('input');
-
 function capitalize(str) {
-  const result = str;
-
-  return result.charAt(0).toUpperCase() + result.slice(1);
+  return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
-inputs.forEach((item) => {
-  let itemName = capitalize(item.getAttribute('name'));
-  const itemLabel = document.createElement('label');
+function formatName(inputName) {
+  let capitalizedInputName = capitalize(inputName);
 
-  if (itemName.toLowerCase().includes('name')) {
-    itemName = itemName.slice(0, -4) + ' ' + itemName.slice(-4);
+  return capitalizedInputName.split(/(?=[A-Z])/).join(' ');
+}
+
+document.querySelectorAll('input.field-text').forEach((input) => {
+  const inputName = input.getAttribute('name');
+
+  if (!inputName) {
+    return;
   }
 
-  itemLabel.classList.add('field-label');
-  itemLabel.setAttribute('for', item.id);
-  itemLabel.textContent = itemName.toUpperCase();
-  item.setAttribute('placeholder', itemName);
-  item.before(itemLabel);
+  const formattedName = formatName(inputName);
+
+  const label = document.createElement('label');
+
+  label.className = 'field-label';
+
+  if (!input.id) {
+    input.id = `${inputName}-${Math.random().toString(36).slice(2, 11)}`;
+  }
+
+  label.htmlFor = input.id;
+
+  label.textContent = formattedName.toUpperCase();
+
+  input.placeholder = `Enter your ${formattedName.toLowerCase()}`;
+
+  input.parentNode.insertBefore(label, input);
 });
